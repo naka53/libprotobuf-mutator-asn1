@@ -391,7 +391,17 @@ std::vector<uint8_t> X509CertificateToDER(
 
 std::vector<uint8_t> SubjectPublicKeyInfoToDER(
   const SubjectPublicKeyInfo& key) {
-  // Contains DER encoded SubjectPublicKeyInfoSequenceToDER.
+  // Contains DER encoded SubjectPublicKeyInfoSequence.
+  std::vector<uint8_t> der;
+
+  Encode(key.value(), der);
+
+  return der;
+}
+
+std::vector<uint8_t> PrivateKeyInfoToDER(
+  const PrivateKeyInfo& key) {
+  // Contains DER encoded PrivateKeyInfo.
   std::vector<uint8_t> der;
 
   Encode(key.value(), der);

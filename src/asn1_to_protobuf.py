@@ -88,6 +88,12 @@ class BitStringEncoder(GenericEncoder):
             unused_bits=0,
         )
 
+class OctetStringEncoder(GenericEncoder):
+    @staticmethod
+    def _encode(string):
+        return OctetString(
+            val=string,
+        )
 
 class SignatureValueEncoder(GenericEncoder):
     @staticmethod
@@ -223,6 +229,23 @@ class SubjectPublicKeyInfoEncoder(GenericEncoder):
             ),
         )
 
+class PrivateKeyEncoder(GenericEncoder):
+    @staticmethod
+    def _encode(asn1):
+        return PrivateKey(
+            value=OctetStringEncoder.encode(asn1.parsed.dump()),
+        )
+
+class PrivateKeyInfoEncoder(GenericEncoder):
+    @staticmethod
+    def _encode(asn1):
+        return PrivateKeyInfo(
+            value=PrivateKeyInfoSequence(
+                version=VersionEncoder.encode(asn1["version"]),
+                algorithm_identifier=AlgorithmIdentifierSequenceEncoder.encode(asn1["private_key_algorithm"]),
+                private_key=PrivateKeyEncoder.encode(asn1["private_key"]),
+            ),
+        )
 
 class UniqueIdentifierEncoder(GenericEncoder):
     @staticmethod
@@ -353,8 +376,11 @@ if __name__ == "__main__":
     with open(sys.argv[1], "rb") as f:
         der = f.read()
     
-    key = keys.PublicKeyInfo.load(der)
-    proto_key = SubjectPublicKeyInfoEncoder.encode(key)
+    key = keys.PrivateKeyInfo.load(der)
+    proto_key = PrivateKeyInfoEncoder.encode(key)
+
+    #key = keys.PublicKeyInfo.load(der)
+    #proto_key = SubjectPublicKeyInfoEncoder.encode(key)
     
     #cert = x509.Certificate.load(der)
     #proto_cert = CertificateEncoder.encode(cert)

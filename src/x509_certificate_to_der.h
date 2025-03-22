@@ -34,6 +34,10 @@ std::vector<uint8_t> X509CertificateToDER(
 std::vector<uint8_t> SubjectPublicKeyInfoToDER(
     const SubjectPublicKeyInfo& key);
 
+  // Encodes |PrivateKeyInfoSequenceToDER| to DER, returning the encoded bytes in |der_|.
+std::vector<uint8_t> PrivateKeyInfoSequenceToDER(
+  const PrivateKeyInfoSequence& key);
+
 // Encodes a |pdu| if |t| contains one; otherwise, encodes the value belonging
 // to |t|.
 template <typename T>
