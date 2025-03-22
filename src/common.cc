@@ -19,7 +19,7 @@
 #include <limits.h>
 #include <math.h>
 
-uint8_t GetVariableIntLen(uint64_t value, size_t base) {
+uint8_t GetVariableIntLen(uint64_t value, std::size_t base) {
   uint8_t base_bits = log2(base);
   for (uint8_t num_bits = (sizeof(value) - 1) * CHAR_BIT; num_bits >= base_bits;
        num_bits -= base_bits) {
@@ -32,7 +32,7 @@ uint8_t GetVariableIntLen(uint64_t value, size_t base) {
 }
 
 void InsertVariableIntBase128(uint64_t value,
-                              size_t pos,
+                              std::size_t pos,
                               std::vector<uint8_t>& der) {
   std::vector<uint8_t> variable_int;
   for (uint8_t i = GetVariableIntLen(value, 128) - 1; i != 0; --i) {
@@ -44,7 +44,7 @@ void InsertVariableIntBase128(uint64_t value,
 }
 
 void InsertVariableIntBase256(uint64_t value,
-                              size_t pos,
+                              std::size_t pos,
                               std::vector<uint8_t>& der) {
   std::vector<uint8_t> variable_int;
   for (uint8_t shift = GetVariableIntLen(value, 256); shift != 0; --shift) {
@@ -54,8 +54,8 @@ void InsertVariableIntBase256(uint64_t value,
 }
 
 void EncodeTagAndLength(uint8_t tag_byte,
-                        size_t len,
-                        size_t pos,
+                        std::size_t len,
+                        std::size_t pos,
                         std::vector<uint8_t>& der) {
   InsertVariableIntBase256(len, pos, der);
   // X.690 (2015), 8.1.3.3: The long-form is used when the length is
@@ -67,14 +67,14 @@ void EncodeTagAndLength(uint8_t tag_byte,
     // Long-form length is encoded as a byte with the high-bit set to indicate
     // the long-form, while the remaining bits indicate how many bytes are used
     // to encode the length.
-    size_t len_num_bytes = GetVariableIntLen(len, 256);
+    std::size_t len_num_bytes = GetVariableIntLen(len, 256);
     der.insert(der.begin() + pos, (0x80 | len_num_bytes));
   }
   der.insert(der.begin() + pos, tag_byte);
 }
 
 void ReplaceTag(uint8_t tag_byte,
-                size_t pos_of_tag,
+                std::size_t pos_of_tag,
                 std::vector<uint8_t>& der) {
   if (der.size() <= pos_of_tag) {
     return;

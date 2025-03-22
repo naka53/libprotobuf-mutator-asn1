@@ -54,25 +54,25 @@ constexpr uint8_t kAsn1Sequence = kAsn1Universal | kAsn1Constructed | 0x10u;
 
 // Returns the number of bytes needed to |base| encode |value| into a
 // variable-length unsigned integer with no leading zeros.
-uint8_t GetVariableIntLen(uint64_t value, size_t base);
+uint8_t GetVariableIntLen(uint64_t value, std::size_t base);
 
 // Converts |value| to a base 128, variable-length, big-endian representation
 // and inserts the result into into |der| at |pos|.
 void InsertVariableIntBase128(uint64_t value,
-                              size_t pos,
+                              std::size_t pos,
                               std::vector<uint8_t>& der);
 
 // Converts |value| to a base 256, variable-length, big-endian representation
 // and inserts the result into into |der| at |pos|.
 void InsertVariableIntBase256(uint64_t value,
-                              size_t pos,
+                              std::size_t pos,
                               std::vector<uint8_t>& der);
 
 // Encodes |tag_byte| and |len| into |der| at |pos| according to X.690
 // (2015), 8.1.2-8.1.5.
 void EncodeTagAndLength(uint8_t tag_byte,
-                        size_t len,
-                        size_t pos,
+                        std::size_t len,
+                        std::size_t pos,
                         std::vector<uint8_t>& der);
 
 // Updates the DER-encoded tag in |der| at offset |pos_of_tag| to a single byte
@@ -80,6 +80,6 @@ void EncodeTagAndLength(uint8_t tag_byte,
 // If the existing tag contains a high tag number (>= 31, per
 // X.590 (2015), 8.1.2.4), the subsequent identifier octets will be removed, so
 // that |der| remains a valid DER encoding.
-void ReplaceTag(uint8_t tag_byte, size_t pos_of_tag, std::vector<uint8_t>& der);
+void ReplaceTag(uint8_t tag_byte, std::size_t pos_of_tag, std::vector<uint8_t>& der);
 
 #endif  // PROTO_ASN1_PDU_COMMON_H_
