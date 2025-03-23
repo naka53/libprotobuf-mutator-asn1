@@ -30,13 +30,13 @@ namespace x509_certificate {
 std::vector<uint8_t> X509CertificateToDER(
     const X509Certificate& X509_certificate);
 
-// Encodes |SubjectPublicKeyInfoSequence| to DER, returning the encoded bytes in |der_|.
+// Encodes |SubjectPublicKeyInfo| to DER, returning the encoded bytes in |der_|.
 std::vector<uint8_t> SubjectPublicKeyInfoToDER(
     const SubjectPublicKeyInfo& key);
 
-// Encodes |PrivateKeyInfoSequence| to DER, returning the encoded bytes in |der_|.
-std::vector<uint8_t> PrivateKeyInfoSequenceToDER(
-  const PrivateKeyInfoSequence& key);
+// Encodes |PrivateKeyInfo| to DER, returning the encoded bytes in |der_|.
+std::vector<uint8_t> PrivateKeyInfoToDER(
+  const PrivateKeyInfo& key);
 
 // Encodes a |pdu| if |t| contains one; otherwise, encodes the value belonging
 // to |t|.

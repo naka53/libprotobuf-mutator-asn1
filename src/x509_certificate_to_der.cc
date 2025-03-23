@@ -282,6 +282,22 @@ DECLARE_ENCODE_FUNCTION(SubjectPublicKeyInfoSequence) {
   EncodeTagAndLength(kAsn1Sequence, der.size() - tag_len_pos, tag_len_pos, der);
 }
 
+DECLARE_ENCODE_FUNCTION(PrivateKeyInfoSequence) {
+  // Save the current size in |tag_len_pos| to place sequence tag and length
+  // after the value is encoded.
+  size_t tag_len_pos = der.size();
+
+  Encode(val.version(), der);
+  Encode(val.algorithm_identifier(), der);
+  Encode(val.private_key(), der);
+
+  // The fields of |subject_public_key_info| are wrapped around a sequence (RFC
+  // 5280, 4.1 & 4.1.2.5).
+  // The current size of |der| subtracted by |tag_len_pos|
+  // equates to the size of the value of |subject_public_key_info|.
+  EncodeTagAndLength(kAsn1Sequence, der.size() - tag_len_pos, tag_len_pos, der);
+}
+
 DECLARE_ENCODE_FUNCTION(TimeChoice) {
   // The |Time| field either has an UTCTime or a GeneralizedTime (RFC 5280, 4.1
   // & 4.1.2.5).
@@ -391,7 +407,7 @@ std::vector<uint8_t> X509CertificateToDER(
 
 std::vector<uint8_t> SubjectPublicKeyInfoToDER(
   const SubjectPublicKeyInfo& key) {
-  // Contains DER encoded SubjectPublicKeyInfoSequence.
+  // Contains DER encoded SubjectPublicKeyInfo.
   std::vector<uint8_t> der;
 
   Encode(key.value(), der);
