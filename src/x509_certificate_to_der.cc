@@ -282,6 +282,28 @@ DECLARE_ENCODE_FUNCTION(SubjectPublicKeyInfoSequence) {
   EncodeTagAndLength(kAsn1Sequence, der.size() - tag_len_pos, tag_len_pos, der);
 }
 
+DECLARE_ENCODE_FUNCTION(RSAPrivateKeySequence) {
+  // Save the current size in |tag_len_pos| to place sequence tag and length
+  // after the value is encoded.
+  size_t tag_len_pos = der.size();
+
+  Encode(val.version(), der);
+  Encode(val.modulus(), der);
+  Encode(val.public_exponent(), der);
+  Encode(val.private_exponent(), der);
+  Encode(val.prime1(), der);
+  Encode(val.prime2(), der);
+  Encode(val.exponent1(), der);
+  Encode(val.exponent2(), der);
+  Encode(val.coefficient(), der);
+
+  // The fields of |rsa_private_key| are wrapped around a sequence (RFC
+  // 5280, 4.1 & 4.1.2.5).
+  // The current size of |der| subtracted by |tag_len_pos|
+  // equates to the size of the value of |rsa_private_key|.
+  EncodeTagAndLength(kAsn1Sequence, der.size() - tag_len_pos, tag_len_pos, der);
+}
+
 DECLARE_ENCODE_FUNCTION(PrivateKeyInfoSequence) {
   // Save the current size in |tag_len_pos| to place sequence tag and length
   // after the value is encoded.
@@ -291,10 +313,10 @@ DECLARE_ENCODE_FUNCTION(PrivateKeyInfoSequence) {
   Encode(val.algorithm_identifier(), der);
   Encode(val.private_key(), der);
 
-  // The fields of |subject_public_key_info| are wrapped around a sequence (RFC
+  // The fields of |private_key_info| are wrapped around a sequence (RFC
   // 5280, 4.1 & 4.1.2.5).
   // The current size of |der| subtracted by |tag_len_pos|
-  // equates to the size of the value of |subject_public_key_info|.
+  // equates to the size of the value of |private_key_info|.
   EncodeTagAndLength(kAsn1Sequence, der.size() - tag_len_pos, tag_len_pos, der);
 }
 
@@ -418,6 +440,16 @@ std::vector<uint8_t> SubjectPublicKeyInfoToDER(
 std::vector<uint8_t> PrivateKeyInfoToDER(
   const PrivateKeyInfo& key) {
   // Contains DER encoded PrivateKeyInfo.
+  std::vector<uint8_t> der;
+
+  Encode(key.value(), der);
+
+  return der;
+}
+
+std::vector<uint8_t> RSAPrivateKeyToDER(
+  const RSAPrivateKey& key) {
+  // Contains DER encoded RSAPrivateKey.
   std::vector<uint8_t> der;
 
   Encode(key.value(), der);

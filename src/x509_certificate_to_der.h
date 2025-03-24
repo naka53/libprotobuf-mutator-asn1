@@ -38,6 +38,10 @@ std::vector<uint8_t> SubjectPublicKeyInfoToDER(
 std::vector<uint8_t> PrivateKeyInfoToDER(
   const PrivateKeyInfo& key);
 
+// Encodes |RSAPrivateKey| to DER, returning the encoded bytes in |der_|.
+std::vector<uint8_t> RSAPrivateKeyToDER(
+  const RSAPrivateKey& key);
+
 // Encodes a |pdu| if |t| contains one; otherwise, encodes the value belonging
 // to |t|.
 template <typename T>
@@ -68,6 +72,8 @@ DECLARE_ENCODE_FUNCTION(ExtendedKeyUsage);
 DECLARE_ENCODE_FUNCTION(AuthorityKeyIdentifier);
 DECLARE_ENCODE_FUNCTION(SubjectKeyIdentifier);
 DECLARE_ENCODE_FUNCTION(SubjectPublicKeyInfoSequence);
+DECLARE_ENCODE_FUNCTION(RSAPrivateKeySequence);
+DECLARE_ENCODE_FUNCTION(PrivateKeyInfoSequence);
 DECLARE_ENCODE_FUNCTION(AlgorithmIdentifierSequence);
 DECLARE_ENCODE_FUNCTION(asn1_pdu::PDU);
 
