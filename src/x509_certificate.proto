@@ -129,19 +129,30 @@ message PrivateKey {
 message RSAPrivateKey {
   // If |pdu| is present, encode |RSAPrivateKey| as an arbitraty pdu.
   optional asn1_pdu.PDU pdu = 1;
-  optional RSAPrivateKey value = 2;
+  optional RSAPrivateKeySequence value = 2;
 }
 
 message RSAPrivateKeySequence {
-  optional Version version = 2;
-  optional asn1_universal_types.Integer modulus = 3;
-  optional asn1_universal_types.Integer public_exponent = 4;
-  optional asn1_universal_types.Integer private_exponent = 5;
-  optional asn1_universal_types.Integer prime1 = 6;
-  optional asn1_universal_types.Integer prime2 = 7;
-  optional asn1_universal_types.Integer exponent1 = 8;
-  optional asn1_universal_types.Integer exponent2 = 9;
-  optional asn1_universal_types.Integer coefficient = 10;
+  optional RSAPrivateKeyVersion version = 2;
+  optional asn1_pdu.PDU modulus = 3;
+  optional asn1_pdu.PDU public_exponent = 4;
+  optional asn1_pdu.PDU private_exponent = 5;
+  optional asn1_pdu.PDU prime1 = 6;
+  optional asn1_pdu.PDU prime2 = 7;
+  optional asn1_pdu.PDU exponent1 = 8;
+  optional asn1_pdu.PDU exponent2 = 9;
+  optional asn1_pdu.PDU coefficient = 10;
+}
+
+message RSAPrivateKeyVersion {
+  // If |pdu| is present, encode |RSAPrivateKeyVersion| as an arbitraty pdu.
+  optional asn1_pdu.PDU pdu = 1;
+  optional RSAPrivateKeyVersionNumber value = 2;
+}
+
+enum RSAPrivateKeyVersionNumber {
+  two_prime = 0;
+  multi = 1;
 }
 
 // See RFC 5280, 4.1 & 4.1.2.7.

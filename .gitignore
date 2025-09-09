@@ -1,1 +1,12 @@
 .DS_Store
+src/asn1_pdu_pb2.py
+.gitignore
+src/asn1_pdu.pb.cc
+src/asn1_pdu.pb.h
+src/asn1_universal_types_pb2.py
+src/asn1_universal_types.pb.cc
+src/asn1_universal_types.pb.h
+src/x509_certificate_pb2.py
+src/x509_certificate.pb.cc
+src/x509_certificate.pb.h
+.vscode/settings.json

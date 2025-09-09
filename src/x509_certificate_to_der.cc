@@ -282,6 +282,13 @@ DECLARE_ENCODE_FUNCTION(SubjectPublicKeyInfoSequence) {
   EncodeTagAndLength(kAsn1Sequence, der.size() - tag_len_pos, tag_len_pos, der);
 }
 
+DECLARE_ENCODE_FUNCTION(RSAPrivateKeyVersionNumber) {
+  // RFC 3447, A.1.2:
+  // Version  ::=  INTEGER  {  two-prime(0), multi(1)  }
+  std::vector<uint8_t> der_version = {kAsn1Integer, 0x01, static_cast<uint8_t>(val)};
+  der.insert(der.end(), der_version.begin(), der_version.end());
+}
+
 DECLARE_ENCODE_FUNCTION(RSAPrivateKeySequence) {
   // Save the current size in |tag_len_pos| to place sequence tag and length
   // after the value is encoded.
@@ -298,7 +305,7 @@ DECLARE_ENCODE_FUNCTION(RSAPrivateKeySequence) {
   Encode(val.coefficient(), der);
 
   // The fields of |rsa_private_key| are wrapped around a sequence (RFC
-  // 5280, 4.1 & 4.1.2.5).
+  // 3447, A.1.2).
   // The current size of |der| subtracted by |tag_len_pos|
   // equates to the size of the value of |rsa_private_key|.
   EncodeTagAndLength(kAsn1Sequence, der.size() - tag_len_pos, tag_len_pos, der);

@@ -119,6 +119,12 @@ class SignatureAlgorithmEncoder(GenericEncoder):
             value=AlgorithmIdentifierSequenceEncoder.encode(asn1),
         )
 
+class RSAPrivateKeyVersionEncoder(GenericEncoder):
+    @staticmethod
+    def _encode(asn1):
+        return RSAPrivateKeyVersion(
+            value=asn1.native,
+        )
 
 class VersionEncoder(GenericEncoder):
     @staticmethod
@@ -246,6 +252,24 @@ class PrivateKeyInfoEncoder(GenericEncoder):
                 private_key=PrivateKeyEncoder.encode(asn1["private_key"]),
             ),
         )
+
+class RSAPrivateKeyEncoder(GenericEncoder):
+    @staticmethod
+    def _encode(asn1):
+        return RSAPrivateKey(
+            value=RSAPrivateKeySequence(
+                version=RSAPrivateKeyVersionEncoder.encode(asn1["version"]),
+                modulus=PDUEncoder.encode(asn1["modulus"]),
+                public_exponent=PDUEncoder.encode(asn1["public_exponent"]),
+                private_exponent=PDUEncoder.encode(asn1["private_exponent"]),
+                prime1=PDUEncoder.encode(asn1["prime1"]),
+                prime2=PDUEncoder.encode(asn1["prime2"]),
+                exponent1=PDUEncoder.encode(asn1["exponent1"]),
+                exponent2=PDUEncoder.encode(asn1["exponent2"]),
+                coefficient=PDUEncoder.encode(asn1["coefficient"]),
+            ),
+        )
+
 
 class UniqueIdentifierEncoder(GenericEncoder):
     @staticmethod
@@ -375,9 +399,12 @@ if __name__ == "__main__":
 
     with open(sys.argv[1], "rb") as f:
         der = f.read()
-    
-    key = keys.PrivateKeyInfo.load(der)
-    proto_key = PrivateKeyInfoEncoder.encode(key)
+
+    key = keys.RSAPrivateKey.load(der)
+    proto_key = RSAPrivateKeyEncoder.encode(key)
+
+    #key = keys.PrivateKeyInfo.load(der)
+    #proto_key = PrivateKeyInfoEncoder.encode(key)
 
     #key = keys.PublicKeyInfo.load(der)
     #proto_key = SubjectPublicKeyInfoEncoder.encode(key)

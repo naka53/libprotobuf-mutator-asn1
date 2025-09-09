@@ -61,6 +61,7 @@ void Encode(const T& t, std::vector<uint8_t>& der) {
 
 DECLARE_ENCODE_FUNCTION(TBSCertificateSequence);
 DECLARE_ENCODE_FUNCTION(VersionNumber);
+DECLARE_ENCODE_FUNCTION(RSAPrivateKeyVersionNumber);
 DECLARE_ENCODE_FUNCTION(ValiditySequence);
 DECLARE_ENCODE_FUNCTION(TimeChoice);
 DECLARE_ENCODE_FUNCTION(ExtensionSequence);
